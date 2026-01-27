@@ -1468,11 +1468,11 @@
                     return;
                 }
                 
-                let message = `*${selectedBranch} ${supplierNames[supplier]}*\n`;
-                message += `📅 ${new Date().toLocaleDateString('tr-TR')}\n\n`;
+                let message = `*${selectedBranch} ${supplierNames[supplier]}*\n\n`;
                 
                 orderData.forEach(item => {
-                    message += `${item.product}: ${item.quantity} ${item.unit}\n`;
+                    const emoji = getProductEmoji(item.product);
+                    message += `${emoji} ${item.product}: ${item.quantity} ${item.unit}\n`;
                 });
                 
                 console.log('Mesaj hazır:', message);
@@ -1504,6 +1504,166 @@
             const label = input.closest('.form-item').querySelector('label').textContent;
             const match = label.match(/\(([^)]+)\)/);
             return match ? match[1] : '';
+        }
+
+        // Ürüne göre emoji seç
+        function getProductEmoji(productName) {
+            const emojiMap = {
+                // Öztürkler
+                'Patates kızartması': '🍟',
+                'Beyaz peynir': '🧀',
+                'Kahvaltılık Kaşar': '🧀',
+                'Tostluk kaşar': '🧀',
+                'Hindi füme salam': '🥩',
+                'Tereyağ': '🧈',
+                'Margarin': '🧈',
+                'Stick ketçap': '🍅',
+                'Stick mayonez': '🥫',
+                'Kova ketçap': '🍅',
+                'Kova mayonez': '🥫',
+                'Süt': '🥛',
+                'Piknik tereyağ': '🧈',
+                'Piknik Bal': '🍯',
+                'Piknik reçel': '🍓',
+                'Piknik fındık kreması': '🌰',
+                'Lutenitsa': '🫑',
+                
+                // Kadir Kasap
+                'Hamburger köftesi': '🍔',
+                'Tostluk sucuk': '🌭',
+                'Kahvaltılık sucuk': '🌭',
+                
+                // Atikler
+                'Yumurta': '🥚',
+                
+                // Özgüllü
+                'Ayran': '🥛',
+                
+                // Manav
+                'Domates': '🍅',
+                'Salatalık': '🥒',
+                'Kıvırcık': '🥬',
+                'Limon': '🍋',
+                'Soğan': '🧅',
+                
+                // Şeref
+                'Peynir helvası': '🍰',
+                
+                // Esenler
+                'Hamburger ekmeği': '🍔',
+                
+                // Altınbaşak
+                'Sosisli ekmeği': '🌭',
+                
+                // Depo - Ekmek & Çay
+                'Tost ekmeği': '🍞',
+                'Çay': '☕',
+                'Stick şeker': '🍬',
+                'Stick tuz': '🧂',
+                'Sigara böreği': '🥟',
+                
+                // Depo - Su & İçecekler
+                'Bardak su': '💧',
+                'Damacana su': '💧',
+                'Fuse tea karpuz': '🍉',
+                'Fuse tea limon': '🍋',
+                'Fuse tea mango': '🥭',
+                'Fuse tea şeftali': '🍑',
+                'Üzüm suyu': '🍇',
+                'Hardaliye': '🍇',
+                'Coca cola kutu': '🥤',
+                'Coca cola şişe': '🥤',
+                'Sade soda': '🥤',
+                'Karpuz çilek soda': '🍓',
+                'Limonlu soda': '🍋',
+                'Elmalı soda': '🍎',
+                'Limonata': '🍋',
+                
+                // Depo - Meyve Suları
+                'Cappy kutu şeftali': '🍑',
+                'Cappy kutu vişne': '🍒',
+                'Cappy kutu kayısı': '🍊',
+                'Cappy kutu portakal': '🍊',
+                'Cappy kutu karışık': '🧃',
+                'Poli kivi': '🥝',
+                'Poli karadut': '🫐',
+                'Poli portakal': '🍊',
+                'Poli kuşburnu': '🌹',
+                'Poli elma': '🍎',
+                'Poli nane limon': '🍋',
+                
+                // Depo - Kahve
+                'Türk kahvesi': '☕',
+                'Kesme şeker': '🍬',
+                'Nescafe express vanilia': '☕',
+                'Nescafe express orjinal': '☕',
+                'Nescafe express latte': '☕',
+                'Nescafe express choco': '☕',
+                'Nescafe express americano': '☕',
+                'Nescafe intense': '☕',
+                'Nescafe sütlü': '☕',
+                'Nescafe caramel': '☕',
+                'Nescafe vanilya': '☕',
+                'Sıcak Çikolata': '☕',
+                'Nescafe Superiore': '☕',
+                'Nescafe Milky creamer': '☕',
+                'Nescafe sıcak çikolata': '☕',
+                'Nescafe cappucino vanilya': '☕',
+                
+                // Depo - Temizlik
+                'Bulaşık makinesi parlatıcısı': '🧼',
+                'Bulaşık makinesi deterjanı': '🧼',
+                'Çamaşır suyu': '🧴',
+                'Wc rulo havlu kağıt': '🧻',
+                'Sarı güç': '🧽',
+                'Camsil': '🧴',
+                'Porçöz': '🧽',
+                'Temizlik bezi': '🧽',
+                'Vileda paspası': '🧹',
+                'Mob paspası': '🧹',
+                'Bulaşık teli': '🧽',
+                'Bulaşık süngeri': '🧽',
+                
+                // Depo - Sofra Malzemeleri
+                'Üstübü': '🍴',
+                'Çips çatalı': '🍴',
+                'Servis peçetesi': '🧻',
+                'Çay bardağı': '☕',
+                'Çay kaşığı': '🥄',
+                'Çay altlığı': '☕',
+                'Türk kahvesi fincanı': '☕',
+                'Köpük tabak': '🍽️',
+                'Plastik çatal': '🍴',
+                'Magnolya kaşığı': '🥄',
+                'Servis tepsisi': '🍽️',
+                'Amerikan servis': '🍽️',
+                'Karton bardak 4 oz': '🥤',
+                'Karton bardak 7 oz': '🥤',
+                'Karton bardak 8 oz': '🥤',
+                'Nescafe karton bardak kapağı': '🥤',
+                
+                // Depo - Hijyen
+                'Lateks eldiven - S': '🧤',
+                'Lateks eldiven - M': '🧤',
+                'Lateks eldiven - L': '🧤',
+                'Islak mendil': '🧻',
+                'Tek çek peçete': '🧻',
+                'yanı kesik kağıt': '🧻',
+                'Köpük sabun': '🧼',
+                
+                // Depo - Ambalaj
+                'Hışır poşet': '🛍️',
+                'Kilitli poşet': '🛍️',
+                'Pos rulosu küçük': '🧾',
+                'Pos rulosu büyük': '🧾',
+                
+                // Depo - Diğer
+                'Turşu': '🥒',
+                'Demlik süzgeç': '☕',
+                'sosis': '🌭'
+            };
+            
+            return emojiMap[productName] || '📦';
         }
 
         // Başarı mesajı göster
