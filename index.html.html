@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="Mutlukent Sipariş Yönetim Sistemi">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mutlukent Sipariş">
+    <title>📦 Mutlukent Sipariş Yönetimi</title>
+    
+    <!-- Favicon (Emoji olarak) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    
+    <!-- iOS için özel simgeler -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563eb'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>📦</text></svg>">
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .date-info {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+
+        .separator {
+            opacity: 0.5;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #dbeafe;
+            border-color: var(--info-color);
+            color: #1e40af;
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        #todaySuppliers {
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .tabs::-webkit-scrollbar-track {
+            background: var(--border-color);
+        }
+
+        .tabs::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background-color: white;
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary-color);
+            background-color: #f0f9ff;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Tab Content */
+        .content {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Supplier Header */
+        .supplier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .supplier-header h2 {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .schedule-info {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-write {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-delivery {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        /* Category Section */
+        .category-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .category-section h3 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* Form */
+        .order-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-item label {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-item input {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background-color: white;
+        }
+
+        .form-item input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-item input:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            animation: slideInRight 0.3s ease-out;
+            z-index: 1001;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Şube Seçim Modal */
+        .branch-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .branch-modal.hidden {
+            display: none;
+        }
+
+        .branch-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: modalSlideUp 0.3s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .branch-content h2 {
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .branch-content p {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .branch-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .branch-btn {
+            padding: 1.25rem 1rem;
+            border: 3px solid var(--border-color);
+            background-color: white;
+            color: var(--text-primary);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .branch-btn:hover {
+            border-color: var(--primary-color);
+            background-color: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .branch-btn.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .selected-branch-display {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selected-branch-display strong {
+            font-size: 1.1rem;
+        }
+
+        .change-branch-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .change-branch-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .supplier-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .tabs {
+                gap: 0.25rem;
+            }
+
+            .tab-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .branch-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .date-info {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .separator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Şube Seçim Modal -->
+    <div id="branchModal" class="branch-modal">
+        <div class="branch-content">
+            <h2>🏢 Şube Seçimi</h2>
+            <p>Lütfen çalıştığınız şubeyi seçin</p>
+            <div class="branch-grid">
+                <button class="branch-btn" data-branch="Rumeli İskelesi">📍 Rumeli İskelesi</button>
+                <button class="branch-btn" data-branch="Vagon">🚂 Vagon</button>
+                <button class="branch-btn" data-branch="Sahil">🌊 Sahil</button>
+                <button class="branch-btn" data-branch="TunaBoyu 1">🐟 TunaBoyu 1</button>
+                <button class="branch-btn" data-branch="TunaBoyu 2">🐟 TunaBoyu 2</button>
+                <button class="branch-btn" data-branch="Millet Bahçesi">🌳 Millet Bahçesi</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>📦 Mutlukent Sipariş Yönetimi</h1>
+                <p class="subtitle">Mutlukent Esenlik Hizmetleri A.Ş.</p>
+                <div class="date-info">
+                    <span id="currentDate"></span>
+                    <span class="separator">|</span>
+                    <span id="currentDay"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Seçili Şube Gösterimi -->
+        <div id="selectedBranchDisplay" class="selected-branch-display" style="display: none;">
+            <div>
+                <strong>🏢 Şube: <span id="selectedBranchName"></span></strong>
+            </div>
+            <button class="change-branch-btn" onclick="changeBranch()">Şube Değiştir</button>
+        </div>
+
+        <!-- Bugünün Siparişleri Alert -->
+        <div id="todayAlert" class="alert alert-info">
+            <strong>📢 Bugün Sipariş Verilecek Firmalar:</strong>
+            <div id="todaySuppliers"></div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="ozturkler">Öztürkler</button>
+            <button class="tab-btn" data-tab="kasap">Kadir Kasap</button>
+            <button class="tab-btn" data-tab="atikler">Atikler</button>
+            <button class="tab-btn" data-tab="ozgullu">Özgüllü</button>
+            <button class="tab-btn" data-tab="manav">Manav</button>
+            <button class="tab-btn" data-tab="seref">Şeref</button>
+            <button class="tab-btn" data-tab="esenler">Esenler</button>
+            <button class="tab-btn" data-tab="altinbasak">Altınbaşak</button>
+            <button class="tab-btn" data-tab="depo">Depo</button>
+        </div>
+
+        <!-- Sipariş Formları -->
+        <div class="content">
+            <!-- Öztürkler -->
+            <div id="ozturkler" class="tab-content active">
+                <div class="supplier-header">
+                    <h2>🧀 Öztürkler</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Pzt-Prş</span>
+                        <span class="badge badge-delivery">Gelir: Sal-Cum</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="ozturkler">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Patates Kızartması (kg)</label>
+                            <input type="number" step="0.1" name="patates" data-product="Patates kızartması" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Beyaz Peynir (kalıp)</label>
+                            <input type="number" name="beyaz_peynir" data-product="Beyaz peynir" data-unit="kalıp">
+                        </div>
+                        <div class="form-item">
+                            <label>Kahvaltılık Kaşar (kg)</label>
+                            <input type="number" step="0.1" name="kahvaltilik_kasar" data-product="Kahvaltılık Kaşar" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Tostluk Kaşar (kg)</label>
+                            <input type="number" step="0.1" name="tostluk_kasar" data-product="Tostluk kaşar" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Hindi Füme Salam (paket)</label>
+                            <input type="number" name="hindi_salam" data-product="Hindi füme salam" data-unit="paket">
+                        </div>
+                        <div class="form-item">
+                            <label>Tereyağ (kg)</label>
+                            <input type="number" step="0.1" name="tereyag" data-product="Tereyağ" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Margarin (kg)</label>
+                            <input type="number" step="0.1" name="margarin" data-product="Margarin" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Stick Ketçap (koli)</label>
+                            <input type="number" name="stick_ketcap" data-product="Stick ketçap" data-unit="koli">
+                        </div>
+                        <div class="form-item">
+                            <label>Stick Mayonez (koli)</label>
+                            <input type="number" name="stick_mayonez" data-product="Stick mayonez" data-unit="koli">
+                        </div>
+                        <div class="form-item">
+                            <label>Kova Ketçap (adet)</label>
+                            <input type="number" name="kova_ketcap" data-product="Kova ketçap" data-unit="adet">
+                        </div>
+                        <div class="form-item">
+                            <label>Kova Mayonez (adet)</label>
+                            <input type="number" name="kova_mayonez" data-product="Kova mayonez" data-unit="adet">
+                        </div>
+                        <div class="form-item">
+                            <label>Süt (lt)</label>
+                            <input type="number" step="0.5" name="sut" data-product="Süt" data-unit="lt">
+                        </div>
+                        <div class="form-item">
+                            <label>Piknik Tereyağ (adet)</label>
+                            <input type="number" name="piknik_tereyag" data-product="Piknik tereyağ" data-unit="adet">
+                        </div>
+                        <div class="form-item">
+                            <label>Piknik Bal (adet)</label>
+                            <input type="number" name="piknik_bal" data-product="Piknik Bal" data-unit="adet">
+                        </div>
+                        <div class="form-item">
+                            <label>Piknik Reçel (adet)</label>
+                            <input type="number" name="piknik_recel" data-product="Piknik reçel" data-unit="adet">
+                        </div>
+                        <div class="form-item">
+                            <label>Piknik Fındık Kreması (adet)</label>
+                            <input type="number" name="piknik_findik" data-product="Piknik fındık kreması" data-unit="adet">
+                        </div>
+                        <div class="form-item">
+                            <label>Lutenitsa (adet)</label>
+                            <input type="number" name="lutenitsa" data-product="Lutenitsa" data-unit="adet">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Kadir Kasap -->
+            <div id="kasap" class="tab-content">
+                <div class="supplier-header">
+                    <h2>🥩 Kadir Kasap</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Sal-Prş-Paz</span>
+                        <span class="badge badge-delivery">Gelir: Ertesi Gün</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="kasap">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Hamburger Köftesi (kg)</label>
+                            <input type="number" step="0.1" name="hamburger" data-product="Hamburger köftesi" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Tostluk Sucuk (kg)</label>
+                            <input type="number" step="0.1" name="tostluk_sucuk" data-product="Tostluk sucuk" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Kahvaltılık Sucuk (kg)</label>
+                            <input type="number" step="0.1" name="kahvaltilik_sucuk" data-product="Kahvaltılık sucuk" data-unit="kg">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Atikler -->
+            <div id="atikler" class="tab-content">
+                <div class="supplier-header">
+                    <h2>🥚 Atikler</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Sal-Prş-Paz</span>
+                        <span class="badge badge-delivery">Gelir: Ertesi Gün</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="atikler">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Yumurta (adet)</label>
+                            <input type="number" name="yumurta" data-product="Yumurta" data-unit="adet">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Özgüllü -->
+            <div id="ozgullu" class="tab-content">
+                <div class="supplier-header">
+                    <h2>🥛 Özgüllü</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Sal-Prş-Paz</span>
+                        <span class="badge badge-delivery">Gelir: Ertesi Gün</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="ozgullu">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Ayran (koli)</label>
+                            <input type="number" name="ayran" data-product="Ayran" data-unit="koli">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Manav -->
+            <div id="manav" class="tab-content">
+                <div class="supplier-header">
+                    <h2>🥬 Manav</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Sal-Prş-Paz</span>
+                        <span class="badge badge-delivery">Gelir: Ertesi Gün</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="manav">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Domates (kg)</label>
+                            <input type="number" step="0.5" name="domates" data-product="Domates" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Salatalık (kg)</label>
+                            <input type="number" step="0.5" name="salatalik" data-product="Salatalık" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Kıvırcık (dip)</label>
+                            <input type="number" name="kivircik" data-product="Kıvırcık" data-unit="dip">
+                        </div>
+                        <div class="form-item">
+                            <label>Limon (kg)</label>
+                            <input type="number" step="0.5" name="limon" data-product="Limon" data-unit="kg">
+                        </div>
+                        <div class="form-item">
+                            <label>Soğan (kg)</label>
+                            <input type="number" step="0.5" name="sogan" data-product="Soğan" data-unit="kg">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Şeref -->
+            <div id="seref" class="tab-content">
+                <div class="supplier-header">
+                    <h2>🍯 Şeref</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Sal-Prş-Paz</span>
+                        <span class="badge badge-delivery">Gelir: Ertesi Gün</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="seref">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Peynir Helvası (kg)</label>
+                            <input type="number" step="0.1" name="peynir_helvasi" data-product="Peynir helvası" data-unit="kg">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Esenler -->
+            <div id="esenler" class="tab-content">
+                <div class="supplier-header">
+                    <h2>🍔 Esenler</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Sal-Prş-Paz</span>
+                        <span class="badge badge-delivery">Gelir: Ertesi Gün</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="esenler">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Hamburger Ekmeği (adet)</label>
+                            <input type="number" name="hamburger_ekmek" data-product="Hamburger ekmeği" data-unit="adet">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Altınbaşak -->
+            <div id="altinbasak" class="tab-content">
+                <div class="supplier-header">
+                    <h2>🌭 Altınbaşak</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Her Gün</span>
+                        <span class="badge badge-delivery">Gelir: 2 Gün Sonra</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="altinbasak">
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label>Sosisli Ekmeği (adet)</label>
+                            <input type="number" name="sosisli_ekmek" data-product="Sosisli ekmeği" data-unit="adet">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Depo -->
+            <div id="depo" class="tab-content">
+                <div class="supplier-header">
+                    <h2>📦 Depo Siparişleri</h2>
+                    <div class="schedule-info">
+                        <span class="badge badge-write">Yazılır: Sal-Prş-Paz</span>
+                        <span class="badge badge-delivery">Gelir: Ertesi Gün</span>
+                    </div>
+                </div>
+                <form class="order-form" data-supplier="depo">
+                    <div class="category-section">
+                        <h3>🍞 Ekmek & Çay Malzemeleri</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Tost Ekmeği (paket)</label><input type="number" name="tost_ekmek" data-product="Tost ekmeği"></div>
+                            <div class="form-item"><label>Çay (koli)</label><input type="number" name="cay" data-product="Çay"></div>
+                            <div class="form-item"><label>Stick Şeker (koli)</label><input type="number" name="stick_seker" data-product="Stick şeker"></div>
+                            <div class="form-item"><label>Stick Tuz (adet)</label><input type="number" name="stick_tuz" data-product="Stick tuz"></div>
+                            <div class="form-item"><label>Sigara Böreği (koli)</label><input type="number" name="sigara_boregi" data-product="Sigara böreği"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>💧 Su & İçecekler</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Bardak Su (koli)</label><input type="number" name="bardak_su" data-product="Bardak su"></div>
+                            <div class="form-item"><label>Damacana Su (adet)</label><input type="number" name="damacana_su" data-product="Damacana su"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>🥤 Soğuk İçecekler</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Fuse Tea Karpuz</label><input type="number" name="fuse_karpuz" data-product="Fuse tea karpuz"></div>
+                            <div class="form-item"><label>Fuse Tea Limon</label><input type="number" name="fuse_limon" data-product="Fuse tea limon"></div>
+                            <div class="form-item"><label>Fuse Tea Mango</label><input type="number" name="fuse_mango" data-product="Fuse tea mango"></div>
+                            <div class="form-item"><label>Fuse Tea Şeftali</label><input type="number" name="fuse_seftali" data-product="Fuse tea şeftali"></div>
+                            <div class="form-item"><label>Üzüm Suyu</label><input type="number" name="uzum_suyu" data-product="Üzüm suyu"></div>
+                            <div class="form-item"><label>Hardaliye</label><input type="number" name="hardaliye" data-product="Hardaliye"></div>
+                            <div class="form-item"><label>Coca Cola Kutu</label><input type="number" name="cola_kutu" data-product="Coca cola kutu"></div>
+                            <div class="form-item"><label>Coca Cola Şişe</label><input type="number" name="cola_sise" data-product="Coca cola şişe"></div>
+                            <div class="form-item"><label>Sade Soda</label><input type="number" name="sade_soda" data-product="Sade soda"></div>
+                            <div class="form-item"><label>Karpuz Çilek Soda</label><input type="number" name="karpuz_soda" data-product="Karpuz çilek soda"></div>
+                            <div class="form-item"><label>Limonlu Soda</label><input type="number" name="limon_soda" data-product="Limonlu soda"></div>
+                            <div class="form-item"><label>Elmalı Soda</label><input type="number" name="elma_soda" data-product="Elmalı soda"></div>
+                            <div class="form-item"><label>Limonata (koli)</label><input type="number" name="limonata" data-product="Limonata"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>🧃 Meyve Suları</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Cappy Kutu Şeftali</label><input type="number" name="cappy_seftali" data-product="Cappy kutu şeftali"></div>
+                            <div class="form-item"><label>Cappy Kutu Vişne</label><input type="number" name="cappy_visne" data-product="Cappy kutu vişne"></div>
+                            <div class="form-item"><label>Cappy Kutu Kayısı</label><input type="number" name="cappy_kayisi" data-product="Cappy kutu kayısı"></div>
+                            <div class="form-item"><label>Cappy Kutu Portakal</label><input type="number" name="cappy_portakal" data-product="Cappy kutu portakal"></div>
+                            <div class="form-item"><label>Cappy Kutu Karışık</label><input type="number" name="cappy_karisik" data-product="Cappy kutu karışık"></div>
+                            <div class="form-item"><label>Poli Kivi</label><input type="number" name="poli_kivi" data-product="Poli kivi"></div>
+                            <div class="form-item"><label>Poli Karadut</label><input type="number" name="poli_karadut" data-product="Poli karadut"></div>
+                            <div class="form-item"><label>Poli Portakal</label><input type="number" name="poli_portakal" data-product="Poli portakal"></div>
+                            <div class="form-item"><label>Poli Kuşburnu</label><input type="number" name="poli_kusburnu" data-product="Poli kuşburnu"></div>
+                            <div class="form-item"><label>Poli Elma</label><input type="number" name="poli_elma" data-product="Poli elma"></div>
+                            <div class="form-item"><label>Poli Nane Limon</label><input type="number" name="poli_nane" data-product="Poli nane limon"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>☕ Nescafe & Kahve</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Türk Kahvesi (kg)</label><input type="number" step="0.1" name="turk_kahve" data-product="Türk kahvesi"></div>
+                            <div class="form-item"><label>Kesme Şeker (adet)</label><input type="number" name="kesme_seker" data-product="Kesme şeker"></div>
+                            <div class="form-item"><label>Nescafe Express Vanilya</label><input type="number" name="nescafe_vanilya" data-product="Nescafe express vanilia"></div>
+                            <div class="form-item"><label>Nescafe Express Orjinal</label><input type="number" name="nescafe_orjinal" data-product="Nescafe express orjinal"></div>
+                            <div class="form-item"><label>Nescafe Express Latte</label><input type="number" name="nescafe_latte" data-product="Nescafe express latte"></div>
+                            <div class="form-item"><label>Nescafe Express Choco</label><input type="number" name="nescafe_choco" data-product="Nescafe express choco"></div>
+                            <div class="form-item"><label>Nescafe Express Americano</label><input type="number" name="nescafe_americano" data-product="Nescafe express americano"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>☕ Nescafe Alegria</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Nescafe Intense (kg)</label><input type="number" step="0.1" name="alegria_intense" data-product="Nescafe intense"></div>
+                            <div class="form-item"><label>Nescafe Sütlü (kg)</label><input type="number" step="0.1" name="alegria_sutlu" data-product="Nescafe sütlü"></div>
+                            <div class="form-item"><label>Nescafe Caramel (kg)</label><input type="number" step="0.1" name="alegria_caramel" data-product="Nescafe caramel"></div>
+                            <div class="form-item"><label>Nescafe Vanilya (kg)</label><input type="number" step="0.1" name="alegria_vanilya_kg" data-product="Nescafe vanilya"></div>
+                            <div class="form-item"><label>Sıcak Çikolata (kg)</label><input type="number" step="0.1" name="alegria_sicak_ciko" data-product="Sıcak Çikolata"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>☕ Nescafe Çekirdek</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Nescafe Superiore (kg)</label><input type="number" step="0.1" name="cekirdek_superiore" data-product="Nescafe Superiore"></div>
+                            <div class="form-item"><label>Nescafe Milky Creamer (kg)</label><input type="number" step="0.1" name="cekirdek_milky" data-product="Nescafe Milky creamer"></div>
+                            <div class="form-item"><label>Nescafe Sıcak Çikolata (kg)</label><input type="number" step="0.1" name="cekirdek_ciko" data-product="Nescafe sıcak çikolata"></div>
+                            <div class="form-item"><label>Nescafe Cappucino Vanilya (kg)</label><input type="number" step="0.1" name="cekirdek_cap_vanilya" data-product="Nescafe cappucino vanilya"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>🧼 Temizlik Malzemeleri</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Bulaşık Mak. Parlatıcı (galon)</label><input type="number" name="parlatici" data-product="Bulaşık makinesi parlatıcısı"></div>
+                            <div class="form-item"><label>Bulaşık Mak. Deterjan (galon)</label><input type="number" name="deterjan" data-product="Bulaşık makinesi deterjanı"></div>
+                            <div class="form-item"><label>Çamaşır Suyu (galon)</label><input type="number" name="camasir_suyu" data-product="Çamaşır suyu"></div>
+                            <div class="form-item"><label>WC Rulo Havlu (koli)</label><input type="number" name="wc_havlu" data-product="Wc rulo havlu kağıt"></div>
+                            <div class="form-item"><label>Sarı Güç (adet)</label><input type="number" name="sari_guc" data-product="Sarı güç"></div>
+                            <div class="form-item"><label>Camsil (adet)</label><input type="number" name="camsil" data-product="Camsil"></div>
+                            <div class="form-item"><label>Porçöz (adet)</label><input type="number" name="porcoz" data-product="Porçöz"></div>
+                            <div class="form-item"><label>Temizlik Bezi (adet)</label><input type="number" name="temizlik_bezi" data-product="Temizlik bezi"></div>
+                            <div class="form-item"><label>Vileda Paspası (adet)</label><input type="number" name="vileda" data-product="Vileda paspası"></div>
+                            <div class="form-item"><label>Mob Paspası (adet)</label><input type="number" name="mob_paspas" data-product="Mob paspası"></div>
+                            <div class="form-item"><label>Bulaşık Teli (adet)</label><input type="number" name="bulasik_teli" data-product="Bulaşık teli"></div>
+                            <div class="form-item"><label>Bulaşık Süngeri (adet)</label><input type="number" name="bulasik_sunger" data-product="Bulaşık süngeri"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>🍽️ Sofra & Servis Malzemeleri</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Üstübü (adet)</label><input type="number" name="ustubu" data-product="Üstübü"></div>
+                            <div class="form-item"><label>Çips Çatalı (adet)</label><input type="number" name="cips_catal" data-product="Çips çatalı"></div>
+                            <div class="form-item"><label>Servis Peçetesi (adet)</label><input type="number" name="servis_pecete" data-product="Servis peçetesi"></div>
+                            <div class="form-item"><label>Çay Bardağı (adet)</label><input type="number" name="cay_bardak" data-product="Çay bardağı"></div>
+                            <div class="form-item"><label>Çay Kaşığı (adet)</label><input type="number" name="cay_kasik" data-product="Çay kaşığı"></div>
+                            <div class="form-item"><label>Çay Altlığı (adet)</label><input type="number" name="cay_altlik" data-product="Çay altlığı"></div>
+                            <div class="form-item"><label>Türk Kahvesi Fincanı (adet)</label><input type="number" name="turk_fincan" data-product="Türk kahvesi fincanı"></div>
+                            <div class="form-item"><label>Köpük Tabak (adet)</label><input type="number" name="kopuk_tabak" data-product="Köpük tabak"></div>
+                            <div class="form-item"><label>Plastik Çatal (paket)</label><input type="number" name="plastik_catal" data-product="Plastik çatal"></div>
+                            <div class="form-item"><label>Magnolya Kaşığı (paket)</label><input type="number" name="magnolya_kasik" data-product="Magnolya kaşığı"></div>
+                            <div class="form-item"><label>Servis Tepsisi (adet)</label><input type="number" name="servis_tepsi" data-product="Servis tepsisi"></div>
+                            <div class="form-item"><label>Amerikan Servis (adet)</label><input type="number" name="amerikan_servis" data-product="Amerikan servis"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>☕ Karton Bardak & Kapaklar</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Karton Bardak 4 oz (adet)</label><input type="number" name="karton_4oz" data-product="Karton bardak 4 oz"></div>
+                            <div class="form-item"><label>Karton Bardak 7 oz (adet)</label><input type="number" name="karton_7oz" data-product="Karton bardak 7 oz"></div>
+                            <div class="form-item"><label>Karton Bardak 8 oz (adet)</label><input type="number" name="karton_8oz" data-product="Karton bardak 8 oz"></div>
+                            <div class="form-item"><label>Nescafe Bardak Kapağı (adet)</label><input type="number" name="nescafe_kapak" data-product="Nescafe karton bardak kapağı"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>🧤 Hijyen & Kişisel Koruma</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Lateks Eldiven S (adet)</label><input type="number" name="lateks_s" data-product="Lateks eldiven - S"></div>
+                            <div class="form-item"><label>Lateks Eldiven M (adet)</label><input type="number" name="lateks_m" data-product="Lateks eldiven - M"></div>
+                            <div class="form-item"><label>Lateks Eldiven L (adet)</label><input type="number" name="lateks_l" data-product="Lateks eldiven - L"></div>
+                            <div class="form-item"><label>Islak Mendil (adet)</label><input type="number" name="islak_mendil" data-product="Islak mendil"></div>
+                            <div class="form-item"><label>Tek Çek Peçete (adet)</label><input type="number" name="tek_cek" data-product="Tek çek peçete"></div>
+                            <div class="form-item"><label>Yanı Kesik Kağıt (adet)</label><input type="number" name="yani_kesik" data-product="yanı kesik kağıt"></div>
+                            <div class="form-item"><label>Köpük Sabun (adet)</label><input type="number" name="kopuk_sabun" data-product="Köpük sabun"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>📦 Poşet & Ambalaj</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Hışır Poşet (paket)</label><input type="number" name="hisir_poset" data-product="Hışır poşet"></div>
+                            <div class="form-item"><label>Kilitli Poşet (paket)</label><input type="number" name="kilitli_poset" data-product="Kilitli poşet"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>🧾 Pos & Kasa Malzemeleri</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Pos Rulosu Küçük (paket)</label><input type="number" name="pos_kucuk" data-product="Pos rulosu küçük"></div>
+                            <div class="form-item"><label>Pos Rulosu Büyük (paket)</label><input type="number" name="pos_buyuk" data-product="Pos rulosu büyük"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-section">
+                        <h3>🍴 Diğer Ürünler</h3>
+                        <div class="form-grid">
+                            <div class="form-item"><label>Turşu (kova)</label><input type="number" name="tursu" data-product="Turşu"></div>
+                            <div class="form-item"><label>Demlik Süzgeç (adet)</label><input type="number" name="demlik_suzgec" data-product="Demlik süzgeç"></div>
+                            <div class="form-item"><label>Sosis (adet)</label><input type="number" name="sosis" data-product="sosis"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary load-last">Son Siparişi Yükle</button>
+                        <button type="button" class="btn btn-danger clear-form">Temizle</button>
+                        <button type="button" class="btn btn-primary save-order">Siparişi Kaydet</button>
+                        <button type="button" class="btn btn-success send-order">WhatsApp'a Gönder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sipariş Takvimi - Hangi gün hangi firmaya sipariş verilir
+        const orderSchedule = {
+            ozturkler: { write: [1, 4], delivery: [2, 5] }, // Pzt, Prş → Sal, Cum
+            kasap: { write: [2, 4, 0], delivery: [3, 5, 1] }, // Sal, Prş, Paz → Çar, Cum, Pzt
+            atikler: { write: [2, 4, 0], delivery: [3, 5, 1] },
+            ozgullu: { write: [2, 4, 0], delivery: [3, 5, 1] },
+            manav: { write: [2, 4, 0], delivery: [3, 5, 1] },
+            seref: { write: [2, 4, 0], delivery: [3, 5, 1] },
+            esenler: { write: [2, 4, 0], delivery: [3, 5, 1] },
+            altinbasak: { write: [0, 1, 2, 3, 4, 5, 6], delivery: [] }, // Her gün yazılabilir
+            depo: { write: [2, 4, 0], delivery: [3, 5, 1] }
+        };
+
+        // Şubeler listesi
+        const branches = [
+            'Rumeli İskelesi',
+            'Vagon',
+            'Sahil',
+            'TunaBoyu 1',
+            'TunaBoyu 2',
+            'Millet Bahçesi'
+        ];
+
+        // Seçili şube
+        let selectedBranch = null;
+
+        // Firma isimleri
+        const supplierNames = {
+            ozturkler: 'Öztürkler',
+            kasap: 'Kadir Kasap',
+            atikler: 'Atikler',
+            ozgullu: 'Özgüllü',
+            manav: 'Manav',
+            seref: 'Şeref',
+            esenler: 'Esenler',
+            altinbasak: 'Altınbaşak',
+            depo: 'Depo Siparişleri'
+        };
+
+        // Günleri Türkçe olarak göster
+        const dayNames = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+        const monthNames = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
+                            'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+
+        // DOM yüklendiğinde başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            console.log('Uygulama başlatılıyor...');
+            
+            // Şube seçimini kontrol et
+            checkBranchSelection();
+            
+            updateDateTime();
+            showTodaySuppliers();
+            setupTabs();
+            setupForms();
+            setInterval(updateDateTime, 60000);
+        }
+
+        // Şube seçimi kontrolü
+        function checkBranchSelection() {
+            console.log('Şube kontrolü yapılıyor...');
+            
+            // LocalStorage'dan şubeyi yükle
+            const savedBranch = localStorage.getItem('selectedBranch');
+            
+            if (savedBranch && branches.includes(savedBranch)) {
+                console.log('Kaydedilmiş şube bulundu:', savedBranch);
+                selectedBranch = savedBranch;
+                showSelectedBranch();
+                hideBranchModal();
+            } else {
+                console.log('Şube seçilmemiş, modal gösteriliyor');
+                showBranchModal();
+            }
+        }
+
+        // Şube seçim modalını göster
+        function showBranchModal() {
+            const modal = document.getElementById('branchModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                
+                // Şube butonlarına event listener ekle
+                const branchBtns = document.querySelectorAll('.branch-btn');
+                branchBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const branch = this.getAttribute('data-branch');
+                        selectBranch(branch);
+                    });
+                });
+            }
+        }
+
+        // Şube seçim modalını gizle
+        function hideBranchModal() {
+            const modal = document.getElementById('branchModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Şube seç
+        function selectBranch(branch) {
+            console.log('Şube seçildi:', branch);
+            selectedBranch = branch;
+            
+            // LocalStorage'a kaydet
+            localStorage.setItem('selectedBranch', branch);
+            
+            // Modalı kapat
+            hideBranchModal();
+            
+            // Seçili şubeyi göster
+            showSelectedBranch();
+            
+            alert('✅ Şube seçildi: ' + branch);
+        }
+
+        // Seçili şubeyi göster
+        function showSelectedBranch() {
+            const display = document.getElementById('selectedBranchDisplay');
+            const branchName = document.getElementById('selectedBranchName');
+            
+            if (display && branchName) {
+                branchName.textContent = selectedBranch;
+                display.style.display = 'flex';
+            }
+        }
+
+        // Şube değiştir
+        function changeBranch() {
+            console.log('Şube değiştiriliyor...');
+            showBranchModal();
+        }
+
+        // Tarih ve saat güncelleme
+        function updateDateTime() {
+            const now = new Date();
+            const day = now.getDate();
+            const month = monthNames[now.getMonth()];
+            const year = now.getFullYear();
+            const dayName = dayNames[now.getDay()];
+
+            document.getElementById('currentDate').textContent = `${day} ${month} ${year}`;
+            document.getElementById('currentDay').textContent = dayName;
+        }
+
+        // Bugün sipariş verilecek firmaları göster
+        function showTodaySuppliers() {
+            const today = new Date().getDay();
+            const todaySuppliersDiv = document.getElementById('todaySuppliers');
+            const suppliers = [];
+
+            for (const [key, schedule] of Object.entries(orderSchedule)) {
+                if (schedule.write.includes(today)) {
+                    suppliers.push(supplierNames[key]);
+                }
+            }
+
+            if (suppliers.length > 0) {
+                todaySuppliersDiv.innerHTML = `<strong>📝 ${suppliers.join(', ')}</strong>`;
+                document.getElementById('todayAlert').style.display = 'block';
+            } else {
+                document.getElementById('todayAlert').style.display = 'none';
+            }
+        }
+
+        // Tab sistemini kur
+        function setupTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(tabName).classList.add('active');
+                });
+            });
+        }
+
+        // Form işlemlerini kur
+        function setupForms() {
+            console.log('Formlar kuruluyor...');
+            const forms = document.querySelectorAll('.order-form');
+            console.log('Bulunan form sayısı:', forms.length);
+            
+            forms.forEach(form => {
+                const supplier = form.getAttribute('data-supplier');
+                console.log('Form kuruluyor:', supplier);
+                
+                // Son siparişi yükle
+                const loadBtn = form.querySelector('.load-last');
+                if (loadBtn) {
+                    loadBtn.addEventListener('click', function() {
+                        console.log('Load butonu tıklandı');
+                        loadLastOrder(supplier, form);
+                    });
+                }
+                
+                // Formu temizle
+                const clearBtn = form.querySelector('.clear-form');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function() {
+                        console.log('Clear butonu tıklandı');
+                        clearForm(form);
+                    });
+                }
+                
+                // Siparişi kaydet
+                const saveBtn = form.querySelector('.save-order');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', function() {
+                        console.log('Save butonu tıklandı');
+                        saveOrder(supplier, form);
+                    });
+                }
+                
+                // WhatsApp'a gönder
+                const sendBtn = form.querySelector('.send-order');
+                if (sendBtn) {
+                    sendBtn.addEventListener('click', function() {
+                        console.log('Send butonu tıklandı');
+                        sendToWhatsApp(supplier, form);
+                    });
+                }
+            });
+            
+            console.log('Formlar kuruldu!');
+        }
+
+        // Son siparişi yükle
+        function loadLastOrder(supplier, form) {
+            const lastOrder = localStorage.getItem(`lastOrder_${supplier}`);
+            
+            if (lastOrder) {
+                const orderData = JSON.parse(lastOrder);
+                const inputs = form.querySelectorAll('input[type="number"]');
+                
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (orderData[name]) {
+                        input.value = orderData[name];
+                    }
+                });
+                
+                showSuccessMessage('Son sipariş yüklendi! ✅');
+            } else {
+                showSuccessMessage('Kaydedilmiş sipariş bulunamadı.', 'warning');
+            }
+        }
+
+        // Formu temizle
+        function clearForm(form) {
+            const inputs = form.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+            showSuccessMessage('Form temizlendi! 🗑️', 'info');
+        }
+
+        // Siparişi kaydet
+        function saveOrder(supplier, form) {
+            try {
+                console.log('Kaydet butonuna basıldı:', supplier);
+                const orderData = {};
+                const inputs = form.querySelectorAll('input[type="number"]');
+                let hasData = false;
+                
+                inputs.forEach(input => {
+                    if (input.value && parseFloat(input.value) > 0) {
+                        orderData[input.getAttribute('name')] = input.value;
+                        hasData = true;
+                    }
+                });
+                
+                console.log('Sipariş verisi:', orderData);
+                
+                if (!hasData) {
+                    alert('⚠️ Lütfen en az bir ürün miktarı girin!');
+                    showSuccessMessage('Lütfen en az bir ürün miktarı girin!', 'warning');
+                    return;
+                }
+                
+                // LocalStorage test
+                try {
+                    localStorage.setItem(`lastOrder_${supplier}`, JSON.stringify(orderData));
+                    saveToHistory(supplier, orderData);
+                    console.log('LocalStorage başarılı');
+                } catch (e) {
+                    console.error('LocalStorage hatası:', e);
+                    alert('⚠️ Veri kaydedilemedi. Tarayıcı ayarlarını kontrol edin.');
+                }
+                
+                alert('✅ Sipariş kaydedildi!');
+                showSuccessMessage('Sipariş kaydedildi! ✅');
+            } catch (error) {
+                console.error('Kaydetme hatası:', error);
+                alert('❌ Hata: ' + error.message);
+            }
+        }
+
+        // Sipariş geçmişine kaydet
+        function saveToHistory(supplier, orderData) {
+            const history = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+            
+            history.unshift({
+                supplier: supplier,
+                supplierName: supplierNames[supplier],
+                date: new Date().toISOString(),
+                data: orderData
+            });
+            
+            if (history.length > 50) {
+                history.pop();
+            }
+            
+            localStorage.setItem('orderHistory', JSON.stringify(history));
+        }
+
+        // WhatsApp'a gönder
+        function sendToWhatsApp(supplier, form) {
+            try {
+                console.log('WhatsApp butonuna basıldı:', supplier);
+                
+                // Şube kontrolü
+                if (!selectedBranch) {
+                    alert('⚠️ Lütfen önce şube seçin!');
+                    showBranchModal();
+                    return;
+                }
+                
+                const orderData = [];
+                const inputs = form.querySelectorAll('input[type="number"]');
+                let hasData = false;
+                
+                inputs.forEach(input => {
+                    if (input.value && parseFloat(input.value) > 0) {
+                        const productName = input.getAttribute('data-product');
+                        const unit = input.getAttribute('data-unit') || extractUnit(input);
+                        orderData.push({
+                            product: productName,
+                            quantity: input.value,
+                            unit: unit
+                        });
+                        hasData = true;
+                    }
+                });
+                
+                console.log('Sipariş verisi:', orderData);
+                
+                if (!hasData) {
+                    alert('⚠️ Lütfen en az bir ürün miktarı girin!');
+                    showSuccessMessage('Lütfen en az bir ürün miktarı girin!', 'warning');
+                    return;
+                }
+                
+                let message = `*${selectedBranch} ${supplierNames[supplier]}*\n`;
+                message += `📅 ${new Date().toLocaleDateString('tr-TR')}\n\n`;
+                
+                orderData.forEach(item => {
+                    message += `${item.product}: ${item.quantity} ${item.unit}\n`;
+                });
+                
+                console.log('Mesaj hazır:', message);
+                
+                // WhatsApp URL'si oluştur
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+                
+                console.log('WhatsApp açılıyor...');
+                alert('📱 WhatsApp açılıyor...');
+                
+                // Yeni pencerede WhatsApp'ı aç
+                const opened = window.open(whatsappUrl, '_blank');
+                
+                if (!opened) {
+                    // Popup engellenmiş olabilir
+                    console.log('Popup engellendi, link kopyalanıyor...');
+                    alert('⚠️ Popup engellendi! Mesajı kopyalayıp WhatsApp\'a yapıştırın:\n\n' + message);
+                }
+                
+                showSuccessMessage('WhatsApp açılıyor... 📱');
+            } catch (error) {
+                console.error('WhatsApp hatası:', error);
+                alert('❌ Hata: ' + error.message);
+            }
+        }
+
+        // Label'dan birimi çıkar (data-unit yoksa)
+        function extractUnit(input) {
+            const label = input.closest('.form-item').querySelector('label').textContent;
+            const match = label.match(/\(([^)]+)\)/);
+            return match ? match[1] : '';
+        }
+
+        // Başarı mesajı göster
+        function showSuccessMessage(message, type = 'success') {
+            const existingMessage = document.querySelector('.success-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'success-message';
+            messageDiv.textContent = message;
+            
+            if (type === 'warning') {
+                messageDiv.style.backgroundColor = '#f59e0b';
+            } else if (type === 'info') {
+                messageDiv.style.backgroundColor = '#3b82f6';
+            }
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // Klavye kısayolları
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                const activeTab = document.querySelector('.tab-content.active');
+                const form = activeTab.querySelector('.order-form');
+                const supplier = form.getAttribute('data-supplier');
+                saveOrder(supplier, form);
+            }
+        });
+
+        // Input validasyonu
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value < 0) {
+                    this.value = 0;
+                }
+            });
+        });
+
+        // Mobil menü kaydırma
+        const tabs = document.querySelector('.tabs');
+        if (tabs) {
+            tabs.addEventListener('wheel', function(e) {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    tabs.scrollLeft += e.deltaY;
+                }
+            });
+        }
+
+        // Touch swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const activeTab = document.querySelector('.tab-btn.active');
+            const allTabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const currentIndex = allTabs.indexOf(activeTab);
+            
+            if (touchEndX < touchStartX - swipeThreshold && currentIndex < allTabs.length - 1) {
+                allTabs[currentIndex + 1].click();
+            }
+            
+            if (touchEndX > touchStartX + swipeThreshold && currentIndex > 0) {
+                allTabs[currentIndex - 1].click();
+            }
+        }
+    </script>
+</body>
+</html>
