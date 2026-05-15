@@ -5,12 +5,13 @@ import TodayAlert from './components/TodayAlert';
 import SupplierTabs from './components/SupplierTabs';
 import OrderForm from './components/OrderForm';
 import AdminDashboard from './components/AdminDashboard';
+import UpdatePrompt from './components/UpdatePrompt';
 
 export default function App() {
   const { selectedBranch, isAdmin, activeSupplier } = useAppStore();
 
-  if (!selectedBranch) return <BranchSelector />;
-  if (isAdmin) return <AdminDashboard />;
+  if (!selectedBranch) return <><BranchSelector /><UpdatePrompt /></>;
+  if (isAdmin) return <><AdminDashboard /><UpdatePrompt /></>;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
@@ -28,6 +29,7 @@ export default function App() {
           <OrderForm key={activeSupplier} supplierId={activeSupplier} />
         </main>
       </div>
+      <UpdatePrompt />
     </div>
   );
 }
