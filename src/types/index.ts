@@ -13,6 +13,8 @@ export interface Product {
   category?: string;
   subcategory?: string;
   presets?: number[];
+  deadline?: string;
+  note?: string;
 }
 
 export interface Supplier {
@@ -25,6 +27,7 @@ export interface Supplier {
     writeLabel: string;
     deliveryLabel: string;
   };
+  deadline?: string;
   products: Product[];
   categoryEmojis?: Record<string, string>;
 }

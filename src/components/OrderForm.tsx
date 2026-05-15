@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppStore } from '../store';
 import { useOrders } from '../hooks/useOrders';
 import { supplierMap } from '../data/suppliers';
@@ -6,6 +6,16 @@ import { generateMessage, sendToWhatsApp, todayISO } from '../lib/whatsapp';
 import type { OrderItem, FavoriteOrder, Product } from '../types';
 import OrderHistory from './OrderHistory';
 import QuickQtyInput from './QuickQtyInput';
+
+type DLStatus = 'ok' | 'soon' | 'passed';
+function dlStatus(deadline: string, now: Date): DLStatus {
+  const [h, m] = deadline.split(':').map(Number);
+  const dl = new Date(now); dl.setHours(h, m, 0, 0);
+  const diff = dl.getTime() - now.getTime();
+  if (diff < 0) return 'passed';
+  if (diff < 60 * 60 * 1000) return 'soon';
+  return 'ok';
+}
 
 interface Props { supplierId: string; }
 
@@ -19,6 +29,12 @@ export default function OrderForm({ supplierId }: Props) {
   const [showFavName, setShowFavName] = useState(false);
   const [favName, setFavName] = useState('');
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'warn' } | null>(null);
+
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(t);
+  }, []);
 
   const items: OrderItem[] = draftOrders[supplierId] ?? [];
   const getQty = (id: string) => items.find(i => i.productId === id)?.quantity ?? 0;
@@ -102,7 +118,25 @@ export default function OrderForm({ supplierId }: Props) {
                style={{ color: qty > 0 ? '#fbbf24' : 'var(--text-secondary)' }}>
               {product.name}
             </p>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{product.unit}</p>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{product.unit}</p>
+              {product.note && (
+                <span className="text-xs" style={{ color: 'rgba(245,158,11,0.7)' }}>{product.note}</span>
+              )}
+              {product.deadline && (() => {
+                const st = dlStatus(product.deadline, now);
+                return (
+                  <span className="text-xs font-semibold px-1.5 py-0 rounded"
+                        style={st === 'passed'
+                          ? { background: 'rgba(239,68,68,0.15)', color: '#f87171' }
+                          : st === 'soon'
+                          ? { background: 'rgba(245,158,11,0.2)', color: '#fbbf24' }
+                          : { background: 'rgba(34,197,94,0.1)', color: '#4ade80' }}>
+                    {st === 'passed' ? '✕ Süre doldu' : `⏰ ${product.deadline}`}
+                  </span>
+                );
+              })()}
+            </div>
           </div>
           {qty > 0 && (
             <span className="text-base font-bold shrink-0" style={{ color: '#f59e0b' }}>
@@ -137,6 +171,20 @@ export default function OrderForm({ supplierId }: Props) {
                   style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' }}>
               {supplier.schedule.deliveryLabel}
             </span>
+            {supplier.deadline && (() => {
+              const st = dlStatus(supplier.deadline, now);
+              const styles = {
+                ok:     { bg: 'rgba(34,197,94,0.12)',  color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' },
+                soon:   { bg: 'rgba(245,158,11,0.2)',  color: '#fbbf24', border: '1px solid rgba(245,158,11,0.5)' },
+                passed: { bg: 'rgba(239,68,68,0.12)',  color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' },
+              }[st];
+              return (
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+                      style={{ background: styles.bg, color: styles.color, border: styles.border }}>
+                  {st === 'passed' ? '✕ Süre doldu' : st === 'soon' ? `⚡ ${supplier.deadline}'e kadar` : `⏰ ${supplier.deadline}'e kadar`}
+                </span>
+              );
+            })()}
           </div>
         </div>
         {activeItems.length > 0 && (

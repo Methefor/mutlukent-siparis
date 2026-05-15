@@ -5,6 +5,7 @@ export const suppliers: Supplier[] = [
     id: 'ozturkler',
     name: 'Öztürkler',
     emoji: '🧀',
+    deadline: '17:00',
     schedule: {
       writeDays: [1, 4],
       writeLabel: 'Yazılır: Pzt-Prş',
@@ -34,6 +35,7 @@ export const suppliers: Supplier[] = [
     id: 'kasap',
     name: 'Kadir Kasap',
     emoji: '🥩',
+    deadline: '17:00',
     schedule: {
       writeDays: [2, 4, 0],
       writeLabel: 'Yazılır: Sal-Prş-Paz',
@@ -49,6 +51,7 @@ export const suppliers: Supplier[] = [
     id: 'atikler',
     name: 'Atikler',
     emoji: '🥚',
+    deadline: '17:00',
     schedule: {
       writeDays: [2, 4, 0],
       writeLabel: 'Yazılır: Sal-Prş-Paz',
@@ -62,6 +65,7 @@ export const suppliers: Supplier[] = [
     id: 'ozgullu',
     name: 'Özgüllü',
     emoji: '🥛',
+    deadline: '17:00',
     schedule: {
       writeDays: [2, 4, 0],
       writeLabel: 'Yazılır: Sal-Prş-Paz',
@@ -75,6 +79,7 @@ export const suppliers: Supplier[] = [
     id: 'manav',
     name: 'Manav',
     emoji: '🥬',
+    deadline: '17:00',
     schedule: {
       writeDays: [2, 4, 0],
       writeLabel: 'Yazılır: Sal-Prş-Paz',
@@ -92,6 +97,7 @@ export const suppliers: Supplier[] = [
     id: 'seref',
     name: 'Şeref',
     emoji: '🍯',
+    deadline: '17:00',
     schedule: {
       writeDays: [2, 4, 0],
       writeLabel: 'Yazılır: Sal-Prş-Paz',
@@ -105,6 +111,7 @@ export const suppliers: Supplier[] = [
     id: 'esenler',
     name: 'Esenler',
     emoji: '🍔',
+    deadline: '17:00',
     schedule: {
       writeDays: [2, 4, 0],
       writeLabel: 'Yazılır: Sal-Prş-Paz',
@@ -118,6 +125,7 @@ export const suppliers: Supplier[] = [
     id: 'altinbasak',
     name: 'Altınbaşak',
     emoji: '🌭',
+    deadline: '17:00',
     schedule: {
       writeDays: [0, 1, 2, 3, 4, 5, 6],
       writeLabel: 'Yazılır: Her Gün',
@@ -128,17 +136,32 @@ export const suppliers: Supplier[] = [
     ],
   },
   {
+    id: 'sogukkuyu',
+    name: 'Soğukkuyu Fırın',
+    emoji: '🍞',
+    deadline: '17:00',
+    schedule: {
+      writeDays: [0, 1, 2, 3, 4, 5, 6],
+      writeLabel: 'Yazılır: Her Gün',
+      deliveryLabel: 'Taze günlük',
+    },
+    products: [
+      { id: 'karadeniz_ekmek', name: 'Karadeniz ekmeği', unit: 'adet', emoji: '🍞' },
+      { id: 'somun_ekmek', name: 'Somun ekmek', unit: 'adet', emoji: '🍞' },
+    ],
+  },
+  {
     id: 'depo',
     name: 'Depo',
     emoji: '📦',
     schedule: {
-      writeDays: [2, 4, 0],
-      writeLabel: 'Yazılır: Sal-Prş-Paz',
+      writeDays: [0, 1, 2, 3, 4, 5, 6],
+      writeLabel: 'Yazılır: Her Gün',
       deliveryLabel: 'Gelir: Ertesi Gün',
     },
     products: [
       // Ekmek & Çay
-      { id: 'tost_ekmek', name: 'Tost ekmeği', unit: 'paket', emoji: '🍞', category: 'Ekmek & Çay' },
+      { id: 'tost_ekmek', name: 'Tost ekmeği', unit: 'paket', emoji: '🍞', category: 'Ekmek & Çay', deadline: '15:00', note: 'Taze günlük' },
       { id: 'cay', name: 'Çay', unit: 'koli', emoji: '☕', category: 'Ekmek & Çay' },
       { id: 'stick_seker', name: 'Stick şeker', unit: 'koli', emoji: '🍬', category: 'Ekmek & Çay' },
       { id: 'stick_tuz', name: 'Stick tuz', unit: 'adet', emoji: '🧂', category: 'Ekmek & Çay' },
@@ -246,6 +269,7 @@ export const suppliers: Supplier[] = [
     id: 'lalorraine',
     name: 'La Lorraine',
     emoji: '🥐',
+    deadline: '17:00',
     schedule: {
       writeDays: [1, 3, 5],
       writeLabel: 'Yazılır: Pzt-Çar-Cum',
@@ -253,22 +277,18 @@ export const suppliers: Supplier[] = [
     },
     categoryEmojis: { 'Börek': '🥟', 'Çörek': '🥐', 'Donut': '🍩' },
     products: [
-      // Börek
       { id: 'll_su_boregi', name: 'Su böreği', unit: 'koli', emoji: '🥟', category: 'Börek' },
       { id: 'll_peynirli_borek', name: 'Peynirli börek', unit: 'koli', emoji: '🥟', category: 'Börek' },
       { id: 'll_ispanakli_borek', name: 'Ispanaklı börek', unit: 'koli', emoji: '🥟', category: 'Börek' },
       { id: 'll_kiymali_borek', name: 'Kıymalı börek', unit: 'koli', emoji: '🥟', category: 'Börek' },
-      // Çörek
       { id: 'll_sade_corek', name: 'Sade çörek', unit: 'koli', emoji: '🥐', category: 'Çörek' },
       { id: 'll_zeytinli_corek', name: 'Zeytinli çörek', unit: 'koli', emoji: '🥐', category: 'Çörek' },
       { id: 'll_peynirli_corek', name: 'Peynirli çörek', unit: 'koli', emoji: '🥐', category: 'Çörek' },
       { id: 'll_cevizli_corek', name: 'Cevizli çörek', unit: 'koli', emoji: '🥐', category: 'Çörek' },
-      // Milföy (subcategory of Çörek)
       { id: 'll_peynirli_milfoy', name: 'Peynirli milföy', unit: 'adet', emoji: '🥐', category: 'Çörek', subcategory: 'Milföy Çeşitleri' },
       { id: 'll_ispanakli_milfoy', name: 'Ispanaklı milföy', unit: 'adet', emoji: '🥐', category: 'Çörek', subcategory: 'Milföy Çeşitleri' },
       { id: 'll_kiymali_milfoy', name: 'Kıymalı milföy', unit: 'adet', emoji: '🥐', category: 'Çörek', subcategory: 'Milföy Çeşitleri' },
       { id: 'll_tavuklu_milfoy', name: 'Tavuklu milföy', unit: 'adet', emoji: '🥐', category: 'Çörek', subcategory: 'Milföy Çeşitleri' },
-      // Donut
       { id: 'll_cilekli_donut', name: 'Çilekli donut', unit: 'adet', emoji: '🍩', category: 'Donut' },
       { id: 'll_cikolatali_donut', name: 'Çikolatalı donut', unit: 'adet', emoji: '🍩', category: 'Donut' },
       { id: 'll_sade_donut', name: 'Sade donut', unit: 'adet', emoji: '🍩', category: 'Donut' },
@@ -278,6 +298,7 @@ export const suppliers: Supplier[] = [
     id: 'algida',
     name: 'Algida',
     emoji: '🍦',
+    deadline: '16:00',
     schedule: {
       writeDays: [1, 4],
       writeLabel: 'Yazılır: Pzt-Prş',
@@ -285,7 +306,6 @@ export const suppliers: Supplier[] = [
     },
     categoryEmojis: { 'Kapalı Dondurma': '🍫', 'Açık Dondurma': '🍨' },
     products: [
-      // Kapalı Dondurma > Magnum
       { id: 'alg_magnum_classic', name: 'Magnum Classic', unit: 'koli', emoji: '🍫', category: 'Kapalı Dondurma', subcategory: 'Magnum' },
       { id: 'alg_magnum_almond', name: 'Magnum Almond', unit: 'koli', emoji: '🍫', category: 'Kapalı Dondurma', subcategory: 'Magnum' },
       { id: 'alg_magnum_white', name: 'Magnum White', unit: 'koli', emoji: '🍫', category: 'Kapalı Dondurma', subcategory: 'Magnum' },
@@ -295,7 +315,6 @@ export const suppliers: Supplier[] = [
       { id: 'alg_magnum_inf_choco', name: 'Magnum Infinity Chocolate', unit: 'koli', emoji: '🍫', category: 'Kapalı Dondurma', subcategory: 'Magnum' },
       { id: 'alg_magnum_inf_caramel', name: 'Magnum Infinity Caramel', unit: 'koli', emoji: '🍫', category: 'Kapalı Dondurma', subcategory: 'Magnum' },
       { id: 'alg_magnum_sandwich', name: 'Magnum Sandwich', unit: 'koli', emoji: '🍫', category: 'Kapalı Dondurma', subcategory: 'Magnum' },
-      // Kapalı Dondurma > Cornetto
       { id: 'alg_cornetto_classic', name: 'Cornetto Classic', unit: 'koli', emoji: '🍦', category: 'Kapalı Dondurma', subcategory: 'Cornetto' },
       { id: 'alg_cornetto_cilek', name: 'Cornetto Çilekli', unit: 'koli', emoji: '🍦', category: 'Kapalı Dondurma', subcategory: 'Cornetto' },
       { id: 'alg_cornetto_karamel', name: 'Cornetto Karamel', unit: 'koli', emoji: '🍦', category: 'Kapalı Dondurma', subcategory: 'Cornetto' },
@@ -305,7 +324,6 @@ export const suppliers: Supplier[] = [
       { id: 'alg_cornetto_brownie', name: 'Cornetto Brownie', unit: 'koli', emoji: '🍦', category: 'Kapalı Dondurma', subcategory: 'Cornetto' },
       { id: 'alg_cornetto_fudge', name: 'Cornetto Fudge', unit: 'koli', emoji: '🍦', category: 'Kapalı Dondurma', subcategory: 'Cornetto' },
       { id: 'alg_cornetto_mini', name: 'Cornetto Mini', unit: 'koli', emoji: '🍦', category: 'Kapalı Dondurma', subcategory: 'Cornetto' },
-      // Açık Dondurma
       { id: 'alg_acik_cikolata', name: 'Çikolatalı', unit: 'küvet', emoji: '🍨', category: 'Açık Dondurma', presets: [1, 2, 3, 5] },
       { id: 'alg_acik_vanilya', name: 'Vanilyalı', unit: 'küvet', emoji: '🍨', category: 'Açık Dondurma', presets: [1, 2, 3, 5] },
       { id: 'alg_acik_cilek', name: 'Çilekli', unit: 'küvet', emoji: '🍨', category: 'Açık Dondurma', presets: [1, 2, 3, 5] },
@@ -328,6 +346,7 @@ export const suppliers: Supplier[] = [
     id: 'bonservis',
     name: 'Bonservis',
     emoji: '🥛',
+    deadline: '17:00',
     schedule: {
       writeDays: [1, 4],
       writeLabel: 'Yazılır: Pzt-Prş',
