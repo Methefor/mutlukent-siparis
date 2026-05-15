@@ -6,6 +6,7 @@ interface AppStore {
   selectedBranch: Branch | null;
   isAdmin: boolean;
   activeSupplier: string;
+  activeView: 'orders' | 'poster' | 'missing';
   draftOrders: Record<string, OrderItem[]>;
   lastSavedOrders: Record<string, OrderItem[]>;
   favorites: FavoriteOrder[];
@@ -13,6 +14,7 @@ interface AppStore {
   setBranch: (branch: Branch | null) => void;
   setAdmin: (v: boolean) => void;
   setActiveSupplier: (id: string) => void;
+  setActiveView: (view: 'orders' | 'poster' | 'missing') => void;
   updateDraft: (supplierId: string, items: OrderItem[]) => void;
   clearDraft: (supplierId: string) => void;
   saveLastOrder: (supplierId: string, items: OrderItem[]) => void;
@@ -28,6 +30,7 @@ export const useAppStore = create<AppStore>()(
       selectedBranch: null,
       isAdmin: false,
       activeSupplier: 'ozturkler',
+      activeView: 'orders',
       draftOrders: {},
       lastSavedOrders: {},
       favorites: [],
@@ -35,6 +38,7 @@ export const useAppStore = create<AppStore>()(
       setBranch: (branch) => set({ selectedBranch: branch }),
       setAdmin: (v) => set({ isAdmin: v }),
       setActiveSupplier: (id) => set({ activeSupplier: id }),
+      setActiveView: (view) => set({ activeView: view }),
 
       updateDraft: (supplierId, items) =>
         set((s) => ({ draftOrders: { ...s.draftOrders, [supplierId]: items } })),

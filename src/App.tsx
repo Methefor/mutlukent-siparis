@@ -6,9 +6,12 @@ import SupplierTabs from './components/SupplierTabs';
 import OrderForm from './components/OrderForm';
 import AdminDashboard from './components/AdminDashboard';
 import UpdatePrompt from './components/UpdatePrompt';
+import BottomNav from './components/BottomNav';
+import KitchenPoster from './components/KitchenPoster';
+import MissingItemsForm from './components/MissingItemsForm';
 
 export default function App() {
-  const { selectedBranch, isAdmin, activeSupplier } = useAppStore();
+  const { selectedBranch, isAdmin, activeSupplier, activeView } = useAppStore();
 
   if (!selectedBranch) return <><BranchSelector /><UpdatePrompt /></>;
   if (isAdmin) return <><AdminDashboard /><UpdatePrompt /></>;
@@ -21,14 +24,26 @@ export default function App() {
 
       <div className="relative z-10">
         <Header />
-        <TodayAlert />
-        <div className="sticky top-0 z-20" style={{ background: 'var(--bg-primary)' }}>
-          <SupplierTabs />
-        </div>
-        <main className="max-w-2xl mx-auto">
-          <OrderForm key={activeSupplier} supplierId={activeSupplier} />
-        </main>
+
+        {activeView === 'orders' && (
+          <>
+            <TodayAlert />
+            <div className="sticky top-0 z-20" style={{ background: 'var(--bg-primary)' }}>
+              <SupplierTabs />
+            </div>
+            <main className="max-w-2xl mx-auto">
+              <OrderForm key={activeSupplier} supplierId={activeSupplier} />
+            </main>
+          </>
+        )}
+
+        {activeView === 'poster' && <KitchenPoster />}
+
+        {activeView === 'missing' && <MissingItemsForm />}
+
+        <BottomNav />
       </div>
+
       <UpdatePrompt />
     </div>
   );
