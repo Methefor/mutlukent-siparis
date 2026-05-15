@@ -16,18 +16,15 @@ export default function QuickQtyInput({ qty, step = 1, presets = DEFAULT_PRESETS
       {presets.map(p => (
         <button
           key={p}
-          onClick={() => onSet(qty === p ? 0 : p)}
+          onClick={() => onSet(Math.round((qty + p) * 100) / 100)}
           className="flex-1 h-10 rounded-xl text-sm font-bold transition active:scale-95"
-          style={qty === p ? {
-            background: 'linear-gradient(135deg,#f59e0b,#d97706)',
-            color: '#1a1a1a',
-          } : {
+          style={{
             background: 'var(--bg-card)',
             border: '1px solid var(--border)',
             color: 'var(--text-muted)',
           }}
         >
-          {p}
+          +{p}
         </button>
       ))}
       <div style={{ width: 1, height: 24, background: 'var(--border)', flexShrink: 0 }} />
